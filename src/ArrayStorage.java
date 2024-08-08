@@ -1,6 +1,6 @@
 import java.util.Arrays;
 
-/**
+/**.
  * Array based storage for Resumes
  */
 public class ArrayStorage {
@@ -30,19 +30,24 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+        int num = -1;
         for (int i = 0; i < storage.length; i++) {
-            if (uuid.equals(storage[i].toString())) {
-                storage[i] = null;
-                size--;
+            if (storage[i] != null && uuid.equals(storage[i].toString())) {
+                num = i;
                 break;
             }
         }
 
-        for (int i = 1; i < storage.length; i++) {
-            if (storage[i - 1] == null && storage[i] != null) {
-                storage[i - 1] = storage[i];
-                storage[i] = null;
-            }
+        if (num == -1) {
+            System.out.println("Введен неверный id");
+            return;
+        }
+
+        storage[num] = null;
+        size--;
+
+        for (int i = num; i < storage.length - 1; i++) {
+            storage[i] = storage[i + 1];
         }
     }
 
