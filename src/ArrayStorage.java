@@ -30,23 +30,23 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        int num = -1;
+        int removeIdx = -1;
         for (int i = 0; i < storage.length; i++) {
             if (storage[i] != null && uuid.equals(storage[i].toString())) {
-                num = i;
+                removeIdx = i;
                 break;
             }
         }
 
-        if (num == -1) {
+        if (removeIdx == -1) {
             System.out.println("Введен неверный id");
             return;
         }
 
-        storage[num] = null;
+        storage[removeIdx] = null;
         size--;
 
-        for (int i = num; i < storage.length - 1; i++) {
+        for (int i = removeIdx; i < storage.length - 1; i++) {
             storage[i] = storage[i + 1];
         }
     }
