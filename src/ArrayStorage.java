@@ -8,47 +8,41 @@ public class ArrayStorage {
     private int size;
 
     void clear() {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] == null) continue;
+        for (int i = 0; i < size; i++) {
             storage[i] = null;
         }
         size = 0;
     }
 
     void save(Resume r) {
-        size++;
-        storage[size - 1] = r;
+        storage[++size - 1] = r;
     }
 
     Resume get(String uuid) {
-        for (Resume resume : storage) {
-            if (resume != null && uuid.equals(resume.toString())) {
-                return resume;
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].toString())) {
+                return storage[i];
             }
         }
         return null;
     }
 
     void delete(String uuid) {
-        int removeIdx = -1;
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i] != null && uuid.equals(storage[i].toString())) {
-                removeIdx = i;
+        boolean isFound = false;
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].toString())) {
+                storage[i] = storage[size - 1];
+                isFound = true;
                 break;
             }
         }
 
-        if (removeIdx == -1) {
+        if (!isFound) {
             System.out.println("Введен неверный id");
             return;
         }
 
-        storage[removeIdx] = null;
         size--;
-
-        for (int i = removeIdx; i < storage.length - 1; i++) {
-            storage[i] = storage[i + 1];
-        }
     }
 
     /**
