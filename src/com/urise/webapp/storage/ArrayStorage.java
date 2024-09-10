@@ -16,11 +16,16 @@ public class ArrayStorage {
 
     public void update(Resume r) {
         Scanner scanner = new Scanner(System.in);
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(r.getUuid())) {
-                storage[i].setUuid(scanner.nextLine());
+        String name = scanner.nextLine();
+
+        if (hasUuid(r.getUuid())) {
+            if (name.equals(r.getUuid())) {
+                System.out.println("Uuid уже занят");
+                return;
             }
         }
+
+        r.setUuid(name);
     }
 
     public void save(Resume r) {
@@ -29,11 +34,9 @@ public class ArrayStorage {
             return;
         }
 
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(r.getUuid())) {
-                System.out.println("Резюме уже есть в БД");
-                return;
-            }
+        if (hasUuid(r.getUuid())) {
+            System.out.println("Резюме уже есть в БД");
+            return;
         }
 
         storage[++size - 1] = r;
@@ -41,7 +44,7 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].toString())) {
+            if (uuid.equals(storage[i].getUuid())) {
                 return storage[i];
             }
         }
@@ -73,5 +76,14 @@ public class ArrayStorage {
 
     public int size() {
         return size;
+    }
+
+    public boolean hasUuid(String uuid) {
+        for (int i = 0; i < size; i++) {
+            if (uuid.equals(storage[i].getUuid())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
