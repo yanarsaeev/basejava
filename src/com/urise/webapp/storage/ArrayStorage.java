@@ -3,10 +3,10 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class ArrayStorage {
-    private Resume[] storage = new Resume[10000];
+    private static final int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size;
 
     public void clear() {
@@ -15,59 +15,43 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        Scanner scanner = new Scanner(System.in);
-        String name = scanner.nextLine();
-
-        if (hasUuid(r.getUuid())) {
-            if (name.equals(r.getUuid())) {
-                System.out.println("Uuid уже занят");
-                return;
-            }
+        int idx = getIndex(r.getUuid());
+        if (idx == -1) {
+            System.out.println("Резюме нет в БД");
+        } else {
+            storage[idx] = r;
         }
-
-        r.setUuid(name);
     }
 
     public void save(Resume r) {
-        if (size > 10000) {
+        if (size > STORAGE_LIMIT) {
             System.out.println("Нет места в БД");
-            return;
-        }
-
-        if (hasUuid(r.getUuid())) {
+        } else if (getIndex(r.getUuid()) != -1) {
             System.out.println("Резюме уже есть в БД");
-            return;
+        } else {
+            storage[size] = r;
+            size++;
         }
-
-        storage[++size - 1] = r;
     }
 
     public Resume get(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].getUuid())) {
-                return storage[i];
-            }
+        int idx = getIndex(uuid);
+        if (idx == -1) {
+            return null;
         }
-        return null;
+
+        return storage[idx];
     }
 
     public void delete(String uuid) {
-        boolean isFound = false;
-        for (int i = 0; i < size; i++) {
-            if (uuid.equals(storage[i].toString())) {
-                storage[i] = storage[size - 1];
-                storage[size - 1] = null;
-                isFound = true;
-                break;
-            }
-        }
-
-        if (!isFound) {
+        int idx = getIndex(uuid);
+        if (idx == -1) {
             System.out.println("Резюме " + uuid + " нет в БД");
-            return;
+        } else {
+            storage[idx] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
         }
-
-        size--;
     }
 
     public Resume[] getAll() {
@@ -78,12 +62,12 @@ public class ArrayStorage {
         return size;
     }
 
-    public boolean hasUuid(String uuid) {
+    public int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].getUuid())) {
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 }
