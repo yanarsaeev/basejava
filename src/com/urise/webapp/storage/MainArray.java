@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.ArrayStorage;
 import com.urise.webapp.model.Resume;
 
 import java.io.BufferedReader;
