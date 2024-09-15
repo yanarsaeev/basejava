@@ -1,10 +1,11 @@
-package com.urise.webapp.storage;
+package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.Storage;
 
 import java.util.Arrays;
 
-public class ArrayStorage implements Storage{
+public class ArrayStorage implements Storage {
     private static final int STORAGE_LIMIT = 10000;
     private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
