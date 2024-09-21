@@ -1,6 +1,13 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.model.Resume;
+
 public class ArrayStorage extends AbstractArrayStorage {
+    @Override
+    protected void insertElement(Resume r, int index) {
+        storage[size] = r;
+    }
+
     @Override
     protected void fillEmptyCell(int index) {
         storage[index] = storage[size - 1];
