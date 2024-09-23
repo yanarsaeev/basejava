@@ -16,7 +16,8 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public Resume get(String uuid) {
         int index = getIndex(uuid);
-        if (index == -1) {
+        if (index < 0) {
+            System.out.println("Резюме " + uuid + " нет в БД");
             return null;
         }
 
@@ -30,7 +31,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void update(Resume r) {
         int index = getIndex(r.getUuid());
-        if (index == -1) {
+        if (index < 0) {
             System.out.println("Резюме нет в БД");
         } else {
             storage[index] = r;
@@ -51,7 +52,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void delete(String uuid) {
         int index = getIndex(uuid);
-        if (index == -1) {
+        if (index < 0) {
             System.out.println("Резюме " + uuid + " нет в БД");
         } else {
             fillEmptyCell(index);
