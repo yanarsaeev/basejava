@@ -6,22 +6,29 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 
 public class AbstractArrayStorageTest {
-    private Storage storage;
+    private final Storage storage = new ArrayStorage();
+
+//    public AbstractArrayStorageTest(Storage storage) {
+//        this.storage = storage;
+//    }
 
     private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid1";
-    private static final String UUID_3 = "uuid1";
+    private static final Resume resume1 = new Resume(UUID_1);
+
+    private static final String UUID_2 = "uuid2";
+    private static final Resume resume2 = new Resume(UUID_2);
+
+    private static final String UUID_3 = "uuid3";
+    private static final Resume resume3 = new Resume(UUID_3);
 
     @Before
     public void setUp() throws Exception {
         storage.clear();
-        storage.save(new Resume(UUID_1));
-        storage.save(new Resume(UUID_2));
-        storage.save(new Resume(UUID_3));
-
+        storage.save(resume1);
+        storage.save(resume2);
+        storage.save(resume3);
     }
 
     @Test
@@ -35,6 +42,7 @@ public class AbstractArrayStorageTest {
 
     @Test
     public void clear() {
+        storage.clear();
         Assert.assertEquals(0, storage.size());
     }
 
@@ -52,6 +60,12 @@ public class AbstractArrayStorageTest {
 
     @Test
     public void getAll() {
+        Resume[] expected = storage.getAll();
+        Resume[] actual = new Resume[storage.size()];
+        actual[0] = resume1;
+        actual[1] = resume2;
+        actual[2] = resume3;
+        Assert.assertEquals(expected, actual);
     }
 
     @Test(expected = NotExistStorageException.class)
