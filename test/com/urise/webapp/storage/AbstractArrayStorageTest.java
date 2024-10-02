@@ -7,12 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class AbstractArrayStorageTest {
-    private final Storage storage = new ArrayStorage();
-
-//    public AbstractArrayStorageTest(Storage storage) {
-//        this.storage = storage;
-//    }
+public abstract class AbstractArrayStorageTest {
+    private final Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final Resume resume1 = new Resume(UUID_1);
@@ -22,6 +18,10 @@ public class AbstractArrayStorageTest {
 
     private static final String UUID_3 = "uuid3";
     private static final Resume resume3 = new Resume(UUID_3);
+
+    protected AbstractArrayStorageTest(Storage storage) {
+        this.storage = storage;
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -37,29 +37,45 @@ public class AbstractArrayStorageTest {
     }
 
     @Test
-    public void get() {
+    public void get() throws Exception {
+        Assert.assertEquals(resume2, storage.get(UUID_2));
     }
 
     @Test
-    public void clear() {
+    public void clear() throws Exception {
         storage.clear();
         Assert.assertEquals(0, storage.size());
     }
 
     @Test
-    public void update() {
+    public void update() throws Exception {
+        storage.update(resume3);
+        Assert.assertEquals(resume3, storage.get(UUID_3));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void updateExist() throws Exception {
+        storage.update(new Resume("dummy"));
     }
 
     @Test
     public void save() {
+        Assert.assertEquals(resume2, storage.get(UUID_2));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void delete() throws Exception {
+        storage.delete(UUID_1);
+        Assert.assertNotNull(storage.get(UUID_1));
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void deleteExist() throws Exception {
+        storage.delete("dummy");
     }
 
     @Test
-    public void delete() {
-    }
-
-    @Test
-    public void getAll() {
+    public void getAll() throws Exception {
         Resume[] expected = storage.getAll();
         Resume[] actual = new Resume[storage.size()];
         actual[0] = resume1;
