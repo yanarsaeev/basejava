@@ -1,10 +1,13 @@
 package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 
 public abstract class AbstractArrayStorageTest {
@@ -61,6 +64,19 @@ public abstract class AbstractArrayStorageTest {
     @Test
     public void save() {
         Assert.assertEquals(resume2, storage.get(UUID_2));
+    }
+
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
+    public void saveOverflow() throws Exception {
+        Resume[] expected = new Resume[storage.size()];
+        try {
+            expected[0] = resume1;
+            expected[1] = resume2;
+            expected[2] = resume3;
+        } catch (StorageException e) {
+            Assert.fail("Переполнение");
+        }
+        expected[3] = new Resume("uuid4");
     }
 
     @Test(expected = NotExistStorageException.class)
