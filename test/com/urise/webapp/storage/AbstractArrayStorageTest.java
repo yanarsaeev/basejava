@@ -43,9 +43,13 @@ public abstract class AbstractArrayStorageTest {
         assertSize(3);
     }
 
+    public void assertGet(Resume resume) {
+        Assert.assertEquals(resume, storage.get(resume.getUuid()));
+    }
+
     @Test
     public void get() throws Exception {
-        Assert.assertEquals(resume2, storage.get(UUID_2));
+        assertGet(resume1);
     }
 
     @Test
