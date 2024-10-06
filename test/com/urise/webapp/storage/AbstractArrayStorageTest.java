@@ -13,6 +13,7 @@ import java.util.Arrays;
 public abstract class AbstractArrayStorageTest {
     private final Storage storage;
 
+    private static final String UUID_NOT_EXIST = "dummy";
     private static final String UUID_1 = "uuid1";
     private static final Resume resume1 = new Resume(UUID_1);
 
@@ -66,7 +67,7 @@ public abstract class AbstractArrayStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void updateExist() throws Exception {
-        storage.update(new Resume("dummy"));
+        storage.update(new Resume(UUID_NOT_EXIST));
     }
 
     @Test
@@ -95,21 +96,18 @@ public abstract class AbstractArrayStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void deleteExist() throws Exception {
-        storage.delete("dummy");
+        storage.delete(UUID_NOT_EXIST);
     }
 
     @Test
     public void getAll() throws Exception {
-        Resume[] expected = storage.getAll();
-        Resume[] actual = new Resume[storage.size()];
-        actual[0] = resume1;
-        actual[1] = resume2;
-        actual[2] = resume3;
-        Assert.assertEquals(expected, actual);
+        Resume[] actual = storage.getAll();
+        Resume[] expected = {resume1, resume2, resume3};
+        Assert.assertArrayEquals(expected, actual);
     }
 
     @Test(expected = NotExistStorageException.class)
     public void getNotExist() throws Exception {
-        storage.get("dummy");
+        storage.get(UUID_NOT_EXIST);
     }
 }
