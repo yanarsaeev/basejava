@@ -34,9 +34,13 @@ public abstract class AbstractArrayStorageTest {
         storage.save(resume3);
     }
 
+    public void assertSize(int size) {
+        Assert.assertEquals(size, storage.size());
+    }
+
     @Test
     public void size() throws Exception {
-        Assert.assertEquals(3, storage.size());
+        assertSize(3);
     }
 
     @Test
