@@ -1,7 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.*;
@@ -30,6 +28,7 @@ public class ListStorage<T> extends AbstractStorage<T> {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUuid().equals(uuid)) {
                 list.remove(list.get(i));
+                break;
             }
         }
     }
@@ -42,6 +41,16 @@ public class ListStorage<T> extends AbstractStorage<T> {
             }
         }
         return null;
+    }
+
+    @Override
+    protected void updater(T key, Resume r) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(r.getUuid())) {
+                list.set(i, r);
+                break;
+            }
+        }
     }
 
     @Override
