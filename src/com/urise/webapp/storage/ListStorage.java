@@ -6,7 +6,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class ListStorage implements Storage {
+public class ListStorage<T> extends AbstractStorage<T> {
     List<Resume> list = new LinkedList<>();
 
     @Override
@@ -16,35 +16,32 @@ public class ListStorage implements Storage {
     }
 
     @Override
-    public void update(Resume r) {
-        if (getElement(r.getUuid()) == null) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        list.set(getIndex(r.getUuid()), r);
+    public int size() {
+        return list.size();
     }
 
     @Override
-    public void save(Resume r) {
-        if (getElement(r.getUuid()) != null) {
-            throw new ExistStorageException(r.getUuid());
-        }
+    protected void saver(T key, Resume r) {
         list.add(r);
     }
 
     @Override
-    public Resume get(String uuid) {
-        if (getIndex(uuid) == -1) {
-            throw new NotExistStorageException(uuid);
+    protected void deleter(String uuid, T key) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(uuid)) {
+                list.remove(list.get(i));
+            }
         }
-        return list.get(getIndex(uuid));
     }
 
     @Override
-    public void delete(String uuid) {
-        if (getElement(uuid) == null) {
-            throw new NotExistStorageException(uuid);
+    protected Resume getter(String uuid, T key) {
+        for (Resume resume : list) {
+            if (resume.getUuid().equals(uuid)) {
+                return resume;
+            }
         }
-        list.remove(getElement(uuid));
+        return null;
     }
 
     @Override
@@ -52,33 +49,14 @@ public class ListStorage implements Storage {
         return list.toArray(Resume[]::new);
      }
 
+
     @Override
-    public int size() {
-        return list.size();
-    }
-
-    public Resume getElement(String uuid) {
-        Iterator<Resume> iterator = list.listIterator();
-        while (iterator.hasNext()) {
-            Resume r = iterator.next();
-            if (r.getUuid().equals(uuid)) {
-                return r;
+    protected boolean isRepeat(String uuid, T key) {
+        for (Resume resume : list) {
+            if (resume.getUuid().equals(uuid)) {
+                return true;
             }
         }
-        return null;
-    }
-
-    public int getIndex(String uuid) {
-        Iterator<Resume> iterator = list.listIterator();
-        int count = 0;
-        int index = -1;
-        while (iterator.hasNext()) {
-            Resume r = iterator.next();
-            if (r.getUuid().equals(uuid)) {
-                index = count;
-            }
-            count++;
-        }
-        return index;
+        return false;
     }
 }
