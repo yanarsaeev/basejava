@@ -2,7 +2,7 @@ package com.urise.webapp.model;
 
 import java.util.UUID;
 
-public class Resume implements Comparable<Resume> {
+public final class Resume implements Comparable<Resume> {
     private final String uuid;
 
     public Resume() {
