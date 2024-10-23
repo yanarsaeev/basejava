@@ -86,6 +86,7 @@ public class ListStorageTest {
     public void save() {
         storage.save(RESUME_4);
         assertGet(RESUME_4);
+        assertSize(storage.size());
     }
 
     @Test(expected = ExistStorageException.class)
