@@ -19,12 +19,12 @@ public class ListStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void saver(T key, Resume r) {
+    protected void doSave(T key, Resume r) {
         list.add(r);
     }
 
     @Override
-    protected void deleter(String uuid, T key) {
+    protected void doDelete(String uuid, T key) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUuid().equals(uuid)) {
                 list.remove(list.get(i));
@@ -34,7 +34,7 @@ public class ListStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected Resume getter(String uuid, T key) {
+    protected Resume doGet(String uuid, T key) {
         for (Resume resume : list) {
             if (resume.getUuid().equals(uuid)) {
                 return resume;
@@ -44,7 +44,7 @@ public class ListStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void updater(T key, Resume r) {
+    protected void doUpdate(T key, Resume r) {
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).getUuid().equals(r.getUuid())) {
                 list.set(i, r);
