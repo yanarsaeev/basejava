@@ -58,7 +58,6 @@ public class ListStorage<T> extends AbstractStorage<T> {
         return list.toArray(Resume[]::new);
      }
 
-
     @Override
     protected boolean isRepeat(String uuid, T key) {
         for (Resume resume : list) {
