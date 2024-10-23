@@ -2,7 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-public class ArrayStorage extends AbstractArrayStorage {
+public class ArrayStorage<T> extends AbstractArrayStorage<T> {
     @Override
     protected void insertElement(Resume r, int index) {
         storage[size] = r;
