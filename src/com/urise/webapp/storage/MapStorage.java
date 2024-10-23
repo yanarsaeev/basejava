@@ -15,7 +15,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void saver(T key, Resume r) {
+    protected void doSave(T key, Resume r) {
         if (isRepeat(key.toString(), key)) {
             throw new ExistStorageException(key.toString());
         }
@@ -23,7 +23,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void deleter(String uuid, T key) {
+    protected void doDelete(String uuid, T key) {
         if (!isRepeat(uuid, key)) {
             throw new NotExistStorageException(uuid);
         }
@@ -31,7 +31,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected Resume getter(String uuid, T key) {
+    protected Resume doGet(String uuid, T key) {
         if (!isRepeat(uuid, key)) {
             throw new NotExistStorageException(uuid);
         }
@@ -39,7 +39,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void updater(T key, Resume r) {
+    protected void doUpdate(T key, Resume r) {
         if (!isRepeat(key.toString(), key)) {
             throw new NotExistStorageException(key.toString());
         }
