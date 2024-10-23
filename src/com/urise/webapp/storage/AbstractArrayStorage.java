@@ -6,7 +6,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage<T> extends AbstractStorage<T> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -16,30 +16,13 @@ public abstract class AbstractArrayStorage implements Storage {
         return size;
     }
 
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index < 0) {
-            throw new NotExistStorageException(uuid);
-        }
-
-        return storage[index];
-    }
-
     public void clear() {
         Arrays.fill(storage, null);
         size = 0;
     }
 
-    public void update(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            storage[index] = r;
-        }
-    }
-
-    public void save(Resume r) {
+    @Override
+    protected void doSave(T key, Resume r) {
         int index = getIndex(r.getUuid());
         if (size > STORAGE_LIMIT) {
             System.out.println("Нет места в БД");
@@ -51,7 +34,8 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void delete(String uuid) {
+    @Override
+    protected void doDelete(String uuid, T key) {
         int index = getIndex(uuid);
         if (index < 0) {
             throw new NotExistStorageException(uuid);
@@ -60,6 +44,36 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[size - 1] = null;
             size--;
         }
+    }
+
+    @Override
+    protected void doUpdate(T key, Resume r) {
+        int index = getIndex(r.getUuid());
+        if (index < 0) {
+            throw new NotExistStorageException(r.getUuid());
+        } else {
+            storage[index] = r;
+        }
+    }
+
+    @Override
+    protected boolean isRepeat(String uuid, T key) {
+        for (int i = 0; i < storage.length; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected Resume doGet(String uuid, T key) {
+        int index = getIndex(uuid);
+        if (index < 0) {
+            throw new NotExistStorageException(uuid);
+        }
+
+        return storage[index];
     }
 
     public Resume[] getAll() {
