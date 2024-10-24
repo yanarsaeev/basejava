@@ -57,16 +57,6 @@ public abstract class AbstractArrayStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected boolean isRepeat(String uuid, T key) {
-        for (int i = 0; i < storage.length; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
     protected Resume doGet(String uuid, T key) {
         int index = getIndex(uuid);
         if (index < 0) {
@@ -74,6 +64,18 @@ public abstract class AbstractArrayStorage<T> extends AbstractStorage<T> {
         }
 
         return storage[index];
+    }
+
+    @Override
+    protected boolean isRepeat(String uuid, T key) {
+        if (size() > 0) {
+            for (int i = 0; i < size; i++) {
+                if (storage[i].getUuid().equals(uuid)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public Resume[] getAll() {
