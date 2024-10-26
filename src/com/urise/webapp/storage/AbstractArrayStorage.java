@@ -67,10 +67,10 @@ public abstract class AbstractArrayStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected boolean isRepeat(String uuid, T key) {
+    protected boolean isExisting(T key) {
         if (size() > 0) {
             for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
+                if (storage[i].getUuid().equals(key)) {
                     return true;
                 }
             }
