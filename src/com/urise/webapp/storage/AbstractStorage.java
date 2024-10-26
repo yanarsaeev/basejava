@@ -10,33 +10,39 @@ public abstract class AbstractStorage<T> implements Storage {
     protected abstract void doDelete(String uuid, T key);
     protected abstract Resume doGet(String uuid, T key);
     protected abstract void doUpdate(T key, Resume r);
-    protected abstract boolean isRepeat(String uuid, T key);
+    protected abstract boolean isExisting(T key);
+
+    public T getExistingSearchKey(T searchKey) {
+        if (isExisting(searchKey)) {
+            throw new ExistStorageException(searchKey.toString());
+        }
+        return searchKey;
+    }
+
+    public T getNotExistingSearchKey(T searchKey) {
+        if (!isExisting(searchKey)) {
+            throw new NotExistStorageException(searchKey.toString());
+        }
+        return searchKey;
+    }
 
     public Resume get(String uuid) {
-        if (!isRepeat(uuid, (T) uuid)) {
-            throw new NotExistStorageException(uuid);
-        }
-        return doGet(uuid, (T) uuid);
+        T key = getNotExistingSearchKey((T) uuid);
+        return doGet(uuid, key);
     }
 
     public void update(Resume r) {
-        if (!isRepeat(r.getUuid(), (T) r.getUuid())) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        doUpdate((T) r.getUuid(), r);
+        T key = getNotExistingSearchKey((T) r.getUuid());
+        doUpdate(key, r);
     }
 
     public void save(Resume r) {
-        if (isRepeat(r.getUuid(), (T) r.getUuid())) {
-            throw new ExistStorageException(r.getUuid());
-        }
-        doSave((T) r.getUuid(), r);
+        T key = getExistingSearchKey((T) r.getUuid());
+        doSave(key, r);
     }
 
     public void delete(String uuid) {
-        if (!isRepeat(uuid, (T) uuid)) {
-            throw new NotExistStorageException(uuid);
-        }
-        doDelete(uuid, (T) uuid);
+        T key = getNotExistingSearchKey((T) uuid);
+        doDelete(uuid, key);
     }
 }
