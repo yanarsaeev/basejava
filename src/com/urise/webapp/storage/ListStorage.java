@@ -59,9 +59,9 @@ public class ListStorage<T> extends AbstractStorage<T> {
      }
 
     @Override
-    protected boolean isRepeat(String uuid, T key) {
+    protected boolean isExisting(T key) {
         for (Resume resume : list) {
-            if (resume.getUuid().equals(uuid)) {
+            if (resume.getUuid().equals(key)) {
                 return true;
             }
         }
