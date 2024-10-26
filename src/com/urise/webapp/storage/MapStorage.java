@@ -16,7 +16,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
 
     @Override
     protected void doSave(T key, Resume r) {
-        if (isRepeat(key.toString(), key)) {
+        if (isExisting(key)) {
             throw new ExistStorageException(key.toString());
         }
         hashMap.put((String) key, r);
@@ -24,7 +24,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
 
     @Override
     protected void doDelete(String uuid, T key) {
-        if (!isRepeat(uuid, key)) {
+        if (!isExisting(key)) {
             throw new NotExistStorageException(uuid);
         }
         hashMap.remove(key);
@@ -32,7 +32,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
 
     @Override
     protected Resume doGet(String uuid, T key) {
-        if (!isRepeat(uuid, key)) {
+        if (!isExisting(key)) {
             throw new NotExistStorageException(uuid);
         }
         return hashMap.get(key);
@@ -40,14 +40,14 @@ public class MapStorage<T> extends AbstractStorage<T> {
 
     @Override
     protected void doUpdate(T key, Resume r) {
-        if (!isRepeat(key.toString(), key)) {
+        if (!isExisting(key)) {
             throw new NotExistStorageException(key.toString());
         }
         hashMap.put((String) key, r);
     }
 
     @Override
-    protected boolean isRepeat(String uuid, T key) {
+    protected boolean isExisting(T key) {
         return hashMap.containsKey(key);
     }
 
