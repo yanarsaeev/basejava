@@ -35,10 +35,10 @@ public abstract class AbstractArrayStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void doDelete(String uuid, T key) {
-        int index = getIndex(uuid);
+    protected void doDelete(T key, Resume r) {
+        int index = getIndex(r.getUuid());
         if (index < 0) {
-            throw new NotExistStorageException(uuid);
+            throw new NotExistStorageException(r.getUuid());
         } else {
             fillEmptyCell(index);
             storage[size - 1] = null;
@@ -57,10 +57,10 @@ public abstract class AbstractArrayStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected Resume doGet(String uuid, T key) {
-        int index = getIndex(uuid);
+    protected Resume doGet(T key, Resume r) {
+        int index = getIndex(r.getUuid());
         if (index < 0) {
-            throw new NotExistStorageException(uuid);
+            throw new NotExistStorageException(r.getUuid());
         }
 
         return storage[index];

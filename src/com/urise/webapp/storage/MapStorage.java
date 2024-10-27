@@ -17,23 +17,23 @@ public class MapStorage<T> extends AbstractStorage<T> {
     @Override
     protected void doSave(T key, Resume r) {
         if (isExisting(key)) {
-            throw new ExistStorageException(key.toString());
+            throw new ExistStorageException(r.getUuid());
         }
         hashMap.put((String) key, r);
     }
 
     @Override
-    protected void doDelete(String uuid, T key) {
+    protected void doDelete(T key, Resume r) {
         if (!isExisting(key)) {
-            throw new NotExistStorageException(uuid);
+            throw new NotExistStorageException(r.getUuid());
         }
         hashMap.remove(key);
     }
 
     @Override
-    protected Resume doGet(String uuid, T key) {
+    protected Resume doGet(T key, Resume r) {
         if (!isExisting(key)) {
-            throw new NotExistStorageException(uuid);
+            throw new NotExistStorageException(r.getUuid());
         }
         return hashMap.get(key);
     }
@@ -41,7 +41,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
     @Override
     protected void doUpdate(T key, Resume r) {
         if (!isExisting(key)) {
-            throw new NotExistStorageException(key.toString());
+            throw new NotExistStorageException(r.getUuid());
         }
         hashMap.put((String) key, r);
     }

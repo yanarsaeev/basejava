@@ -7,8 +7,8 @@ import com.urise.webapp.model.Resume;
 
 public abstract class AbstractStorage<T> implements Storage {
     protected abstract void doSave(T key, Resume r);
-    protected abstract void doDelete(String uuid, T key);
-    protected abstract Resume doGet(String uuid, T key);
+    protected abstract void doDelete(T key, Resume r);
+    protected abstract Resume doGet(T key, Resume r);
     protected abstract void doUpdate(T key, Resume r);
     protected abstract boolean isExisting(T key);
 
@@ -28,7 +28,7 @@ public abstract class AbstractStorage<T> implements Storage {
 
     public Resume get(String uuid) {
         T key = getNotExistingSearchKey((T) uuid);
-        return doGet(uuid, key);
+        return doGet(key, new Resume(uuid));
     }
 
     public void update(Resume r) {
@@ -43,6 +43,6 @@ public abstract class AbstractStorage<T> implements Storage {
 
     public void delete(String uuid) {
         T key = getNotExistingSearchKey((T) uuid);
-        doDelete(uuid, key);
+        doDelete(key, new Resume(uuid));
     }
 }
