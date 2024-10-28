@@ -40,7 +40,7 @@ public class ListStorageTest {
     }
 
     public ListStorageTest() {
-        this.storage = new ListStorage<>();
+        this.storage = new ListStorage();
     }
 
     @Before

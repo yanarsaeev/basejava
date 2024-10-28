@@ -1,17 +1,14 @@
 package com.urise.webapp;
 
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.ListStorage;
-import com.urise.webapp.storage.MapStorage;
-import com.urise.webapp.storage.SortedArrayStorage;
-import com.urise.webapp.storage.Storage;
+import com.urise.webapp.storage.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class MainArray {
-    private final static Storage ARRAY_STORAGE = new ListStorage<>();
+    private final static Storage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));

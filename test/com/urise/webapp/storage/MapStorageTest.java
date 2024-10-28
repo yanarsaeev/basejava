@@ -42,7 +42,7 @@ public class MapStorageTest {
     }
 
     public MapStorageTest() {
-        this.storage = new MapStorage<>();
+        this.storage = new MapStorage();
     }
 
     @Before
