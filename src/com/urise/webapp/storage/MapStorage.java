@@ -7,7 +7,7 @@ import com.urise.webapp.model.Resume;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapStorage<T> extends AbstractStorage<T> {
+public class MapStorage extends AbstractStorage<String> {
     Map<String, Resume> hashMap = new HashMap<>();
     @Override
     public void clear() {
@@ -15,15 +15,15 @@ public class MapStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void doSave(T key, Resume r) {
+    protected void doSave(String key, Resume r) {
         if (isExisting(key)) {
             throw new ExistStorageException(r.getUuid());
         }
-        hashMap.put((String) key, r);
+        hashMap.put(key, r);
     }
 
     @Override
-    protected void doDelete(T key, Resume r) {
+    protected void doDelete(String key, Resume r) {
         if (!isExisting(key)) {
             throw new NotExistStorageException(r.getUuid());
         }
@@ -31,7 +31,7 @@ public class MapStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected Resume doGet(T key, Resume r) {
+    protected Resume doGet(String key, Resume r) {
         if (!isExisting(key)) {
             throw new NotExistStorageException(r.getUuid());
         }
@@ -39,15 +39,15 @@ public class MapStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void doUpdate(T key, Resume r) {
+    protected void doUpdate(String key, Resume r) {
         if (!isExisting(key)) {
             throw new NotExistStorageException(r.getUuid());
         }
-        hashMap.put((String) key, r);
+        hashMap.put(key, r);
     }
 
     @Override
-    protected boolean isExisting(T key) {
+    protected boolean isExisting(String key) {
         return hashMap.containsKey(key);
     }
 
