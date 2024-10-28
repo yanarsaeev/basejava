@@ -6,7 +6,7 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage<T> extends AbstractStorage<T> {
+public abstract class AbstractArrayStorage extends AbstractStorage<String> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -21,53 +21,46 @@ public abstract class AbstractArrayStorage<T> extends AbstractStorage<T> {
         size = 0;
     }
 
-    @Override
-    protected void doSave(T key, Resume r) {
+    public int checkIndex(Resume r) {
         int index = getIndex(r.getUuid());
-        if (size > STORAGE_LIMIT) {
-            System.out.println("Нет места в БД");
-        } else if (index > 0) {
+        if (index < 0) {
+            throw new NotExistStorageException(r.getUuid());
+        }
+        return index;
+    }
+
+    @Override
+    protected void doSave(String key, Resume r) {
+        int index = getIndex(r.getUuid());
+        if (index > 0) {
             throw new ExistStorageException(r.getUuid());
-        } else {
-            insertElement(r, index);
-            size++;
         }
+        insertElement(r, index);
+        size++;
     }
 
     @Override
-    protected void doDelete(T key, Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            fillEmptyCell(index);
-            storage[size - 1] = null;
-            size--;
-        }
+    protected void doDelete(String key, Resume r) {
+        int index = checkIndex(r);
+        fillEmptyCell(index);
+        storage[size - 1] = null;
+        size--;
     }
 
     @Override
-    protected void doUpdate(T key, Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        } else {
-            storage[index] = r;
-        }
+    protected void doUpdate(String key, Resume r) {
+        int index = checkIndex(r);
+        storage[index] = r;
     }
 
     @Override
-    protected Resume doGet(T key, Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-
+    protected Resume doGet(String key, Resume r) {
+        int index = checkIndex(r);
         return storage[index];
     }
 
     @Override
-    protected boolean isExisting(T key) {
+    protected boolean isExisting(String key) {
         if (size() > 0) {
             for (int i = 0; i < size; i++) {
                 if (storage[i].getUuid().equals(key)) {
