@@ -4,13 +4,12 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class ListStorage<T> extends AbstractStorage<T> {
-    List<Resume> list = new LinkedList<>();
+public class ListStorage extends AbstractStorage<String> {
+    private final List<Resume> list = new LinkedList<>();
 
     @Override
     public void clear() {
-        List<Resume> copyList = new LinkedList<>(list);
-        list.removeAll(copyList);
+        list.clear();
     }
 
     @Override
@@ -19,38 +18,25 @@ public class ListStorage<T> extends AbstractStorage<T> {
     }
 
     @Override
-    protected void doSave(T key, Resume r) {
+    protected void doSave(String key, Resume r) {
         list.add(r);
     }
 
     @Override
-    protected void doDelete(T key, Resume r) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getUuid().equals(r.getUuid())) {
-                list.remove(list.get(i));
-                break;
-            }
-        }
+    protected void doDelete(String key, Resume r) {
+        list.remove(r);
     }
 
     @Override
-    protected Resume doGet(T key, Resume r) {
-        for (Resume resume : list) {
-            if (resume.getUuid().equals(r.getUuid())) {
-                return resume;
-            }
-        }
-        return null;
+    protected Resume doGet(String key, Resume r) {
+        int index = list.indexOf(r);
+        return list.get(index);
     }
 
     @Override
-    protected void doUpdate(T key, Resume r) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getUuid().equals(r.getUuid())) {
-                list.set(i, r);
-                break;
-            }
-        }
+    protected void doUpdate(String key, Resume r) {
+        int index = list.indexOf(r);
+        list.set(index, r);
     }
 
     @Override
@@ -59,7 +45,7 @@ public class ListStorage<T> extends AbstractStorage<T> {
      }
 
     @Override
-    protected boolean isExisting(T key) {
+    protected boolean isExisting(String key) {
         for (Resume resume : list) {
             if (resume.getUuid().equals(key)) {
                 return true;
