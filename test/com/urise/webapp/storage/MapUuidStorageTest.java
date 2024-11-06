@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MapStorageTest {
+public class MapUuidStorageTest {
     private final Storage storage;
 
     private static final String UUID_NOT_EXIST = "dummy";
@@ -41,8 +41,8 @@ public class MapStorageTest {
         Assert.assertEquals(size, storage.size());
     }
 
-    public MapStorageTest() {
-        this.storage = new MapStorage();
+    public MapUuidStorageTest() {
+        this.storage = new MapUuidStorage();
     }
 
     @Before
