@@ -4,53 +4,56 @@ import com.urise.webapp.model.Resume;
 
 import java.util.*;
 
-public class ListStorage extends AbstractStorage<String> {
-    private final List<Resume> list = new LinkedList<>();
+public class ListStorage extends AbstractStorage<Integer> {
+    private final List<Resume> storage = new LinkedList<>();
 
     @Override
     public void clear() {
-        list.clear();
+        storage.clear();
     }
 
     @Override
     public int size() {
-        return list.size();
+        return storage.size();
     }
 
     @Override
-    protected void doSave(String key, Resume r) {
-        list.add(r);
+    protected void doSave(Integer searchKey, Resume r) {
+        storage.add(r);
     }
 
     @Override
-    protected void doDelete(String key, Resume r) {
-        list.remove(r);
+    protected void doDelete(Integer searchKey) {
+        storage.remove((int) searchKey);
     }
 
     @Override
-    protected Resume doGet(String key, Resume r) {
-        int index = list.indexOf(r);
-        return list.get(index);
+    protected Resume doGet(Integer searchKey) {
+        return storage.get(searchKey);
     }
 
     @Override
-    protected void doUpdate(String key, Resume r) {
-        int index = list.indexOf(r);
-        list.set(index, r);
+    protected void doUpdate(Integer searchKey, Resume r) {
+        storage.set(searchKey, r);
     }
 
     @Override
-    public Resume[] getAll() {
-        return list.toArray(Resume[]::new);
-     }
+    public List<Resume> getAll() {
+        return new ArrayList<>(storage);
+    }
 
     @Override
-    protected boolean isExisting(String key) {
-        for (Resume resume : list) {
-            if (resume.getUuid().equals(key)) {
-                return true;
+    protected boolean isExisting(Integer searchKey) {
+        return searchKey >= 0;
+    }
+
+    @Override
+    protected Integer getSearchKey(String uuid) {
+        for (int i = 0; i < size(); i++) {
+            if (uuid.equals(storage.get(i).getUuid())) {
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 }
