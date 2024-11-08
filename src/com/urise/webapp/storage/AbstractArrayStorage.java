@@ -1,12 +1,12 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 
-public abstract class AbstractArrayStorage extends AbstractStorage<String> {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
 
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
@@ -21,61 +21,42 @@ public abstract class AbstractArrayStorage extends AbstractStorage<String> {
         size = 0;
     }
 
-    public int checkIndex(Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index < 0) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        return index;
-    }
-
     @Override
-    protected void doSave(String key, Resume r) {
-        int index = getIndex(r.getUuid());
-        if (index > 0) {
-            throw new ExistStorageException(r.getUuid());
+    protected void doSave(Integer searchKey, Resume r) {
+        if (size >= STORAGE_LIMIT) {
+            throw new StorageException("Storage overflow", r.getUuid());
         }
-        insertElement(r, index);
+        insertElement(r, searchKey);
         size++;
     }
 
     @Override
-    protected void doDelete(String key, Resume r) {
-        int index = checkIndex(r);
-        fillEmptyCell(index);
+    protected void doDelete(Integer searchKey) {
+        fillEmptyCell(searchKey);
         storage[size - 1] = null;
         size--;
     }
 
     @Override
-    protected void doUpdate(String key, Resume r) {
-        int index = checkIndex(r);
-        storage[index] = r;
+    protected void doUpdate(Integer searchKey, Resume r) {
+        storage[searchKey] = r;
     }
 
     @Override
-    protected Resume doGet(String key, Resume r) {
-        int index = checkIndex(r);
-        return storage[index];
+    protected Resume doGet(Integer searchKey) {
+        return storage[searchKey];
     }
 
     @Override
-    protected boolean isExisting(String key) {
-        if (size() > 0) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(key)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    protected boolean isExisting(Integer searchKey) {
+        return searchKey >= 0;
     }
 
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
+    @Override
+    public List<Resume> getAll() {
+        return Arrays.asList(Arrays.copyOfRange(storage, 0, size));
     }
 
-    protected abstract int getIndex(String uuid);
     protected abstract void fillEmptyCell(int index);
     protected abstract void insertElement(Resume r, int index);
 }
