@@ -1,69 +1,56 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapUuidStorage extends AbstractStorage<String> {
-    Map<String, Resume> hashMap = new HashMap<>();
+    private final Map<String, Resume> storage = new HashMap<>();
     @Override
     public void clear() {
-        hashMap.clear();
+        storage.clear();
     }
 
     @Override
-    protected void doSave(String key, Resume r) {
-        if (isExisting(key)) {
-            throw new ExistStorageException(r.getUuid());
-        }
-        hashMap.put(key, r);
+    protected void doSave(String searchKey, Resume r) {
+        storage.put(searchKey, r);
     }
 
     @Override
-    protected void doDelete(String key, Resume r) {
-        if (!isExisting(key)) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        hashMap.remove(key);
+    protected void doDelete(String searchKey) {
+        storage.remove(searchKey);
     }
 
     @Override
-    protected Resume doGet(String key, Resume r) {
-        if (!isExisting(key)) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        return hashMap.get(key);
+    protected Resume doGet(String searchKey) {
+        return storage.get(searchKey);
     }
 
     @Override
-    protected void doUpdate(String key, Resume r) {
-        if (!isExisting(key)) {
-            throw new NotExistStorageException(r.getUuid());
-        }
-        hashMap.put(key, r);
+    protected void doUpdate(String searchKey, Resume r) {
+        storage.put(searchKey, r);
     }
 
     @Override
-    protected boolean isExisting(String key) {
-        return hashMap.containsKey(key);
+    protected boolean isExisting(String searchKey) {
+        return storage.containsKey(searchKey);
     }
 
+    @Override
+    protected String getSearchKey(String uuid) {
+        return uuid;
+    }
 
     @Override
-    public Resume[] getAll() {
-        Resume[] resumes = new Resume[hashMap.size()];
-        int id = 0;
-        for (Resume r : hashMap.values()) {
-            resumes[id++] = r;
-        }
-        return resumes;
+    public List<Resume> getAll() {
+        return new ArrayList<>(storage.values());
     }
 
     @Override
     public int size() {
-        return hashMap.size();
+        return storage.size();
     }
 }
