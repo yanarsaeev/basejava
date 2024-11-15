@@ -7,7 +7,7 @@ import java.util.Objects;
 public class CompanySection extends Section {
     private final List<Company> companies;
 
-    CompanySection() {
+    public CompanySection() {
         this.companies = new LinkedList<>();
     }
 
