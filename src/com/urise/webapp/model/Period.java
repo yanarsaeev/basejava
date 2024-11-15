@@ -9,7 +9,7 @@ public class Period {
     private final String title;
     private final String description;
 
-    Period(LocalDate start, LocalDate end, String title, String description) {
+    public Period(LocalDate start, LocalDate end, String title, String description) {
         this.start = start;
         this.end = end;
         this.title = title;
