@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private final File directory;
 
     StreamSerialize streamSerialize;
 
-    protected AbstractFileStorage(File directory, StreamSerialize streamSerialize) {
+    protected FileStorage(File directory, StreamSerialize streamSerialize) {
         Objects.requireNonNull(directory);
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
