@@ -8,7 +8,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -75,18 +74,11 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAll() {
-        Path[] paths;
         try {
-            paths = (Path[]) Files.list(directory).toArray();
+            return Files.list(directory).map(this::doGet).toList();
         } catch (IOException e) {
-            throw new StorageException("path getAll error", null);
+            throw new StorageException("getAll error", null);
         }
-
-        List<Resume> list = new ArrayList<>(paths.length);
-        for (Path path : paths) {
-            list.add(doGet(path));
-        }
-        return list;
     }
 
     @Override
