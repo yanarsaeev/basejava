@@ -5,15 +5,17 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class MainFile {
-    static void listFilesRecursively(File directory) {
+    static void listFilesRecursively(File directory, int count) {
         if (directory.isDirectory()) {
             File[] files = directory.listFiles();
             if (files != null) {
+                StringBuilder stringBuilder = new StringBuilder(" ".repeat(count * 2));
                 for (File file : files) {
                     if (file.isDirectory()) {
-                        listFilesRecursively(file);
+                        System.out.println(stringBuilder.append(file.getName()));
+                        listFilesRecursively(file, count + 1);
                     } else {
-                        System.out.println(file.getAbsolutePath());
+                        System.out.println(file.getName());
                     }
                 }
             }
@@ -45,6 +47,6 @@ public class MainFile {
         }
 
         File directory = new File("C:/javaops/basejava");
-        listFilesRecursively(directory);
+        listFilesRecursively(directory, 0);
     }
 }
