@@ -15,8 +15,7 @@ import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
     private final Path directory;
-
-    StreamSerialize streamSerialize;
+    private final StreamSerialize streamSerialize;
 
     protected PathStorage(String dir, StreamSerialize streamSerialize) {
         directory = Paths.get(dir);
@@ -76,28 +75,24 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> getAll() {
-        try {
-            return Files.list(directory).map(this::doGet).collect(Collectors.toList());
-        } catch (IOException e) {
-            throw new StorageException("getAll error", null);
-        }
+        return getList().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
     public void clear() {
-        try (Stream<Path> paths = Files.list(directory)) {
-            paths.forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null);
-        }
+        getList().forEach(this::doDelete);
     }
 
     @Override
     public int size() {
-        String[] list = directory.toFile().list();
-        if (list == null) {
-            throw new StorageException("Directory read error", null);
+        return getList().toList().size();
+    }
+
+    public Stream<Path> getList() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("getList error", null);
         }
-        return list.length;
     }
 }
