@@ -11,8 +11,7 @@ import java.util.Objects;
 
 public class FileStorage extends AbstractStorage<File> {
     private final File directory;
-
-    StreamSerialize streamSerialize;
+    private final StreamSerialize streamSerialize;
 
     protected FileStorage(File directory, StreamSerialize streamSerialize) {
         Objects.requireNonNull(directory);
@@ -33,6 +32,7 @@ public class FileStorage extends AbstractStorage<File> {
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
+        doUpdate(file, r);
     }
 
     @Override
@@ -75,11 +75,7 @@ public class FileStorage extends AbstractStorage<File> {
         File[] files = directory.listFiles();
         List<Resume> list = new ArrayList<>();
         for (File file : Objects.requireNonNull(files)) {
-            try {
-                list.add(streamSerialize.doRead(new BufferedInputStream(new FileInputStream(file))));
-            } catch (IOException e) {
-                throw new StorageException("getAll error", file.getName(), e);
-            }
+            list.add(doGet(file));
         }
         return list;
     }
