@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
-    protected static final File STORAGE_DIR = new File("C:\\projects\\storage");
+    protected static final File STORAGE_DIR = new File("C:\\javaops\\basejava\\storage");
 
     protected final Storage storage;
 
