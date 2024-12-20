@@ -28,6 +28,10 @@ public class Company implements Serializable {
         this.periods = new ArrayList<>();
     }
 
+    public <T> Company(List<Period> ts) {
+        this.periods = ts;
+    }
+
 
     public String getName() {
         return name;
