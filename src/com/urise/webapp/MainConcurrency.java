@@ -6,8 +6,8 @@ import java.util.List;
 public class MainConcurrency {
     private static final int THREADS_NUMBER = 10000;
     private int counter;
-    private static final Object object1 = new Object();
-    private static final Object object2 = new Object();
+    public static final Object object1 = new Object();
+    public static final Object object2 = new Object();
     public static void main(String[] args) throws InterruptedException {
         System.out.println(Thread.currentThread().getName());
 
@@ -71,10 +71,10 @@ class Thread1 extends Thread {
     @Override
     public void run() {
         System.out.println("Thread1: попытка взять object1");
-        synchronized (TestConc.object1) {
+        synchronized (MainConcurrency.object1) {
             System.out.println("Thread1: object1 взят");
             System.out.println("Thread1: попытка взять object2");
-            synchronized (TestConc.object2) {
+            synchronized (MainConcurrency.object2) {
                 System.out.println("Thread1: object2 взят");
             }
         }
@@ -85,10 +85,10 @@ class Thread2 extends Thread {
     @Override
     public void run() {
         System.out.println("Thread2: попытка взять object2");
-        synchronized (TestConc.object2) {
+        synchronized (MainConcurrency.object2) {
             System.out.println("Thread2: object2 взят");
             System.out.println("Thread2: попытка взять object1");
-            synchronized (TestConc.object1) {
+            synchronized (MainConcurrency.object1) {
                 System.out.println("Thread2: object1 взят");
             }
         }
