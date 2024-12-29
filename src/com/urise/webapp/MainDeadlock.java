@@ -1,41 +1,29 @@
 package com.urise.webapp;
 
 public class MainDeadlock {
-    public static final Object object1 = new Object();
-    public static final Object object2 = new Object();
+    public static final String lock1 = "lock 1";
+    public static final String lock2 = "lock 2";
+
+    public static void deadlock(String lock1, String lock2) {
+        new Thread(() -> {
+            System.out.println("попытка взять " + lock1);
+            synchronized (lock1) {
+                System.out.println(lock1 + " взят");
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                System.out.println("попытка взять " + lock2);
+                synchronized (lock2) {
+                    System.out.println(lock2 + " взят");
+                }
+            }
+        }).start();
+    }
 
     public static void main(String[] args) {
-        Thread1 thread1 = new Thread1();
-        Thread2 thread2 = new Thread2();
-        thread1.start();
-        thread2.start();
-    }
-}
-
-class Thread1 extends Thread {
-    @Override
-    public void run() {
-        System.out.println("Thread1: попытка взять object1");
-        synchronized (MainDeadlock.object1) {
-            System.out.println("Thread1: object1 взят");
-            System.out.println("Thread1: попытка взять object2");
-            synchronized (MainDeadlock.object2) {
-                System.out.println("Thread1: object2 взят");
-            }
-        }
-    }
-}
-
-class Thread2 extends Thread {
-    @Override
-    public void run() {
-        System.out.println("Thread2: попытка взять object2");
-        synchronized (MainDeadlock.object2) {
-            System.out.println("Thread2: object2 взят");
-            System.out.println("Thread2: попытка взять object1");
-            synchronized (MainDeadlock.object1) {
-                System.out.println("Thread2: object1 взят");
-            }
-        }
+        deadlock(lock1, lock2);
+        deadlock(lock2, lock1);
     }
 }
