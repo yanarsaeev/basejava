@@ -24,7 +24,7 @@ public class MainStream {
         int sum = integers.stream().mapToInt(Integer::intValue).sum();
 
         return integers.stream()
-                .filter(num -> sum % 2 != 0 ? num % 2 == 0 : num % 2 != 0)
+                .filter(num -> (sum % 2 != 0) == (num % 2 == 0))
                 .collect(Collectors.toList());
     }
 }
