@@ -10,7 +10,9 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
@@ -18,10 +20,10 @@ public abstract class AbstractStorageTest {
     protected final Storage storage;
 
     private static final String UUID_NOT_EXIST = "dummy";
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
+    private static final String UUID_1 = String.valueOf(UUID.randomUUID());
+    private static final String UUID_2 = String.valueOf(UUID.randomUUID());
+    private static final String UUID_3 = String.valueOf(UUID.randomUUID());
+    private static final String UUID_4 = String.valueOf(UUID.randomUUID());
 
     private static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, "Maxim Maximov");
     private static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2, "Ali Aliev");
@@ -97,7 +99,9 @@ public abstract class AbstractStorageTest {
     public void getAllSorted() throws Exception {
         List<Resume> list = storage.getAllSorted();
         Assert.assertEquals(3, list.size());
-        Assert.assertEquals(list, Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
+        List<Resume> copyList = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(copyList);
+        Assert.assertEquals(list, copyList);
     }
 
     @Test(expected = NotExistStorageException.class)
