@@ -20,10 +20,10 @@ public abstract class AbstractStorageTest {
     protected final Storage storage;
 
     private static final String UUID_NOT_EXIST = "dummy";
-    private static final String UUID_1 = String.valueOf(UUID.randomUUID());
-    private static final String UUID_2 = String.valueOf(UUID.randomUUID());
-    private static final String UUID_3 = String.valueOf(UUID.randomUUID());
-    private static final String UUID_4 = String.valueOf(UUID.randomUUID());
+    private static final String UUID_1 = String.valueOf(UUID.randomUUID());;
+    private static final String UUID_2 = String.valueOf(UUID.randomUUID());;
+    private static final String UUID_3 = String.valueOf(UUID.randomUUID());;
+    private static final String UUID_4 = String.valueOf(UUID.randomUUID());;
 
     private static final Resume RESUME_1 = ResumeTestData.createResume(UUID_1, "Maxim Maximov");
     private static final Resume RESUME_2 = ResumeTestData.createResume(UUID_2, "Ali Aliev");
@@ -100,6 +100,7 @@ public abstract class AbstractStorageTest {
         List<Resume> list = storage.getAllSorted();
         Assert.assertEquals(3, list.size());
         List<Resume> copyList = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(copyList);
         Assert.assertEquals(list, copyList);
     }
 
