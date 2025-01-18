@@ -6,11 +6,19 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.urise.webapp.model.ContactType.*;
 import static java.time.LocalDate.*;
 
 public class ResumeTestData {
-    public static Resume createResume(String fullName, String uuid) {
+    public static Resume createResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
+        resume.addContact(SKYPE, "qwertt1234");
+        resume.addContact(LINKEDIN, "qwerty");
+        resume.addContact(PHONE, "89990990909");
+        resume.addContact(MAIL, "qweerty@gmail.com");
+        resume.addContact(GITHUB, "qwertycode");
+        resume.addContact(STACKOVERFLOW, "qwertystack");
+
 //        TextSection textSection = new TextSection("Ведущий стажировок и корпоративного обучения по " +
 //                "Java Web и Enterprise технологиям");
 //        TextSection textSection1 = new TextSection("Аналитический склад ума, сильная логика, креативность, " +
