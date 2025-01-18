@@ -4,7 +4,7 @@ import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.model.Resume;
 
-import java.util.Comparator;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -65,9 +65,8 @@ public abstract class AbstractStorage<T> implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         LOG.info("getAllSorted");
-        Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName);
         List<Resume> list = getAll();
-        list.sort(RESUME_COMPARATOR);
+        Collections.sort(list);
         return list;
     }
 }
