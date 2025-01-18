@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -110,7 +111,9 @@ public class ListStorageTest {
     public void getAllSorted() throws Exception {
         List<Resume> list = storage.getAllSorted();
         Assert.assertEquals(3, list.size());
-        Assert.assertEquals(list, Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
+        List<Resume> copyList = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        Collections.sort(copyList);
+        Assert.assertEquals(list, copyList);
     }
 
     @Test(expected = NotExistStorageException.class)
