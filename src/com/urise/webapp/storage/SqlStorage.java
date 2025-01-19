@@ -6,10 +6,7 @@ import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -25,13 +22,19 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume r) {
-        sqlHelper.execute("UPDATE resume SET full_name = ? WHERE uuid = ?", ps -> {
-            ps.setString(1, r.getFullName());
-            ps.setString(2, r.getUuid());
-            if (ps.executeUpdate() == 0) {
-                throw new NotExistStorageException(r.getUuid());
+        sqlHelper.transcationalExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                ps.setString(1, r.getFullName());
+                ps.setString(2, r.getUuid());
+                if (ps.executeUpdate() == 0) {
+                    throw new NotExistStorageException(r.getUuid());
+                }
             }
-            ps.execute();
+            try (PreparedStatement ps = conn.prepareStatement("DELETE FROM contact WHERE resume_uuid =?")) {
+                ps.setString(1, r.getUuid());
+                ps.execute();
+            }
+            insertContact(conn, r);
             return null;
         });
     }
@@ -44,7 +47,6 @@ public class SqlStorage implements Storage {
                ps.setString(2, r.getFullName());
                ps.execute();
            }
-
            insertContact(conn, r);
            return null;
         });
@@ -84,29 +86,29 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> resumes = new ArrayList<>();
-        sqlHelper.transcationalExecute(conn -> {
+        return sqlHelper.transcationalExecute(conn -> {
+            Map<String, Resume> resumes = new HashMap<>();
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r ORDER BY full_name, uuid")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    resumes.add(new Resume(rs.getString("uuid").trim(), rs.getString("full_name")));
+                    String uuid = rs.getString("uuid");
+                    resumes.put(uuid, new Resume(uuid, rs.getString("full_name")));
                 }
             }
 
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c" +
-                    " LEFT JOIN public.resume r" +
-                    "    on r.uuid = c.resume_uuid")) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r" +
+                    " LEFT JOIN public.contact c on r.uuid = c.resume_uuid ")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    for (Resume resume : resumes) {
-                        addContact(resume, rs);
-                    }
+                    String resumeUuid = rs.getString("uuid");
+                    Resume r = resumes.get(resumeUuid);
+                    addContact(r, rs);
                 }
             }
-            return null;
+            List<Resume> list = new ArrayList<>(resumes.values());
+            Collections.sort(list);
+            return list;
         });
-        Collections.sort(resumes);
-        return resumes;
     }
 
     @Override
