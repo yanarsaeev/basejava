@@ -87,27 +87,27 @@ public class SqlStorage implements Storage {
     @Override
     public List<Resume> getAllSorted() {
         return sqlHelper.transcationalExecute(conn -> {
-            Map<String, Resume> resumes = new HashMap<>();
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r ORDER BY full_name, uuid")) {
-                ResultSet rs = ps.executeQuery();
-                while (rs.next()) {
-                    String uuid = rs.getString("uuid");
-                    resumes.put(uuid, new Resume(uuid, rs.getString("full_name")));
-                }
-            }
+           Map<String, Resume> resumes = new LinkedHashMap<>();
+           try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r ORDER BY full_name, uuid")) {
+               ResultSet rs = ps.executeQuery();
+               while (rs.next()) {
+                   String uuid = rs.getString("uuid");
+                   resumes.put(uuid, new Resume(uuid, rs.getString("full_name")));
+               }
+           }
 
-            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume r" +
-                    " LEFT JOIN public.contact c on r.uuid = c.resume_uuid ")) {
+           try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact c")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    String resumeUuid = rs.getString("uuid");
-                    Resume r = resumes.get(resumeUuid);
-                    addContact(r, rs);
+                    String uuid = rs.getString("resume_uuid");
+                    if (resumes.get(uuid) == null) {
+                        throw new NotExistStorageException(uuid);
+                    }
+
+                    addContact(resumes.get(uuid), rs);
                 }
-            }
-            List<Resume> list = new ArrayList<>(resumes.values());
-            Collections.sort(list);
-            return list;
+           }
+           return new ArrayList<>(resumes.values());
         });
     }
 
