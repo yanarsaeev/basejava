@@ -5,7 +5,7 @@ import com.urise.webapp.model.Resume;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class AbstractArrayStorageTest extends AbstractStorageTest {
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     private static final int STORAGE_LIMIT = 10000;
     public AbstractArrayStorageTest(Storage storage) {
         super(storage);
