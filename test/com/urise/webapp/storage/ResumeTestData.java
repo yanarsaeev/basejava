@@ -19,34 +19,14 @@ public class ResumeTestData {
         resume.addContact(GITHUB, "qwertycode");
         resume.addContact(STACKOVERFLOW, "qwertystack");
 
-//        TextSection textSection = new TextSection("Ведущий стажировок и корпоративного обучения по " +
-//                "Java Web и Enterprise технологиям");
-//        TextSection textSection1 = new TextSection("Аналитический склад ума, сильная логика, креативность, " +
-//                "инициативность. Пурист кода и архитектуры.");
-//
-//        ListSection listSection = new ListSection("Организация команды и успешная реализация Java проектов " +
-//                "для сторонних заказчиков", "разработка проектов \"Разработка Web приложения\",\"Java Enterprise\"");
-//
-//        ListSection listSection1 = new ListSection("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
-//                "XML/XSD/XSLT, SQL, C/C++, Unix shell scripts", "Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy");
-//
-//        LocalDate start = of(2020, 6, 11);
-//        LocalDate end = of(2021, 5, 5);
-//        Period period = new Period(start, end, "Java Developer", "Spring, Java, SQL");
-//        Company company = new Company("VKontakte", "vk.com");
-//        company.addPeriod(period);
-//
-//        List<Company> companyList = new ArrayList<>();
-//        companyList.add(company);
-//
-//        CompanySection companySection = new CompanySection(companyList);
-//        companySection.addCompany(company);
-
-//        resume.addSection(SectionType.OBJECTIVE, textSection);
-//        resume.addSection(SectionType.PERSONAL, textSection1);
-//        resume.addSection(SectionType.ACHIEVEMENT, listSection);
-//        resume.addSection(SectionType.QUALIFICATIONS,listSection1);
-//        resume.addSection(SectionType.EXPERIENCE, companySection);
+        resume.addSection(SectionType.OBJECTIVE, new TextSection("Ведущий стажировок и корпоративного обучения по " +
+                "Java Web и Enterprise технологиям"));
+        resume.addSection(SectionType.PERSONAL, new TextSection("Аналитический склад ума, сильная логика, креативность, " +
+                "инициативность. Пурист кода и архитектуры."));
+        resume.addSection(SectionType.ACHIEVEMENT, new ListSection("Организация команды и успешная реализация Java проектов " +
+                "для сторонних заказчиков", "разработка проектов \"Разработка Web приложения\",\"Java Enterprise\""));
+        resume.addSection(SectionType.QUALIFICATIONS, new ListSection("JEE AS: GlassFish (v2.1, v3), OC4J, JBoss, Tomcat, Jetty, WebLogic, WSO2",
+                "XML/XSD/XSLT, SQL, C/C++, Unix shell scripts", "Languages: Java, Scala, Python/Jython/PL-Python, JavaScript, Groovy"));
 
         return resume;
     }
