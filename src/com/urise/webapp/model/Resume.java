@@ -90,4 +90,8 @@ public final class Resume implements Comparable<Resume>, Serializable {
         int cmp = fullName.compareTo(o.fullName);
         return cmp != 0 ? cmp : uuid.compareTo(o.uuid);
     }
+
+    public String getContact(ContactType contactType) {
+        return contacts.get(contactType);
+    }
 }
